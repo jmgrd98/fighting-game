@@ -25,10 +25,11 @@ const shop = new Sprite({
     ctx: ctx,
     position: {
         x: 600,
-        y: 0
+        y: 128
     },
     imgSrc: "./assets/shop.png",
-    scale: 2.75
+    scale: 2.75,
+    framesMax: 6
 });
 
 export const player = new Fighter({
@@ -41,7 +42,7 @@ export const player = new Fighter({
     },
     velocity: {
         x: 0,
-        y: 10
+        y: 100
     },
     offset: {
         x: 0,

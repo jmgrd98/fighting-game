@@ -26,6 +26,7 @@ class Sprite {
             height: 50
         }
         this.isAttacking;
+        this.health = 100;
     }
 
     draw() {
@@ -41,7 +42,7 @@ class Sprite {
     update() {
         this.draw();
 
-        this.attackBox.position.x = this.position.x - this.attackBox.offset.x;
+        this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
         this.attackBox.position.y = this.position.y;
 
         this.position.x += this.velocity.x;
@@ -164,6 +165,17 @@ function animate() {
         player.isAttacking
     ) {
         player.isAttacking = false;
+        document.querySelector("#enemyHealth").style.width = `${enemy.health}%`;
+    }
+
+    if (rectangularCollision({
+        rectangle1: enemy,
+        rectangle2: player
+    }) && 
+        enemy.isAttacking
+    ) {
+        enemy.isAttacking = false;
+        document.querySelector("#playerHealth").style.width = `${player.health}%`;
     }
 }
 
@@ -198,8 +210,9 @@ window.addEventListener("keydown", (event) => {
             enemy.velocity.y = -20;
             break;
         case "ArrowDown":
-            keys.ArrowDown.pressed = true;
-            enemy.lastKey = 'ArrowDown';
+            // keys.ArrowDown.pressed = true;
+            // enemy.lastKey = 'ArrowDown';
+            enemy.attack();
             break;
 
         case " ":

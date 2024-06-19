@@ -1,10 +1,11 @@
 import Sprite from "./js/classes/Sprite.js";
 import Fighter from "./js/classes/Fighter.js";
+// import { decreaseTimer, determineWinner, rectangularCollision } from "./js/utils/utils.js";
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = Math.min(innerWidth, 1024); // Restrict canvas width to 1024 or window width, whichever is smaller
+canvas.width = Math.min(innerWidth, 1024);
 canvas.height = innerHeight;
 canvas.style.width = "100%";
 canvas.style.height = "100%";
@@ -20,7 +21,17 @@ const background = new Sprite({
     imgSrc: "./assets/background.png"
 });
 
-const player = new Fighter({
+const shop = new Sprite({
+    ctx: ctx,
+    position: {
+        x: 600,
+        y: 0
+    },
+    imgSrc: "./assets/shop.png",
+    scale: 2.75
+});
+
+export const player = new Fighter({
     ctx: ctx,
     canvas: canvas,
     gravity: gravity,
@@ -85,7 +96,7 @@ const keys = {
     }
 }
 
-function rectangularCollision({ rectangle1, rectangle2 }) {
+export function rectangularCollision({ rectangle1, rectangle2 }) {
     return (
         rectangle1.attackBox.position.x + rectangle1.attackBox.width >= rectangle2.position.x &&
         rectangle1.attackBox.position.x <= rectangle2.position.x + rectangle2.width &&
@@ -94,7 +105,7 @@ function rectangularCollision({ rectangle1, rectangle2 }) {
     )
 }
 
-function determineWinner({ player, enemy, timerId }) {
+export function determineWinner({ player, enemy, timerId }) {
     clearTimeout(timerId);
     document.querySelector('#displayText').style.display = 'flex';
     if (player.health == enemy.health) {
@@ -112,7 +123,7 @@ function determineWinner({ player, enemy, timerId }) {
 
 let timer = 60;
 let timerId;
-function decreaseTimer() {
+export function decreaseTimer() {
     if (timer > 0) {
         timerId = setTimeout(decreaseTimer, 1000);
         timer--;
@@ -131,6 +142,7 @@ function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     background.update();
+    shop.update();
 
     player.update();
     enemy.update();

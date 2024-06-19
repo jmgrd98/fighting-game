@@ -11,6 +11,15 @@ canvas.style.height = "100%";
 
 const gravity = 0.7;
 
+const background = new Sprite({
+    ctx: ctx,
+    position: {
+        x: 0,
+        y: 0
+    },
+    imgSrc: "./assets/background.png"
+});
+
 const player = new Fighter({
     ctx: ctx,
     canvas: canvas,
@@ -120,6 +129,9 @@ decreaseTimer();
 function animate() {
     window.requestAnimationFrame(animate);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    background.update();
+
     player.update();
     enemy.update();
 

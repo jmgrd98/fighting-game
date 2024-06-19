@@ -1,5 +1,4 @@
-import Sprite from "./js/classes/Sprite.js";
-import Fighter from "./js/classes/Fighter.js";
+import { Sprite, Fighter } from "./js/classes.js";
 // import { decreaseTimer, determineWinner, rectangularCollision } from "./js/utils/utils.js";
 
 const canvas = document.querySelector("canvas");
@@ -48,7 +47,9 @@ export const player = new Fighter({
         x: 0,
         y: 0
     },
-    color: "red"
+    imgSrc: "./assets/samuraiMack/Idle.png",
+    framesMax: 8,
+    scale: 1
 });
 
 const enemy = new Fighter({

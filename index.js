@@ -49,7 +49,11 @@ export const player = new Fighter({
     },
     imgSrc: "./assets/samuraiMack/Idle.png",
     framesMax: 8,
-    scale: 1
+    scale: 2.5,
+    offset: {
+        x: 215,
+        y: 230
+    }
 });
 
 const enemy = new Fighter({

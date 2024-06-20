@@ -52,7 +52,25 @@ export const player = new Fighter({
     scale: 2.5,
     offset: {
         x: 215,
-        y: 230
+        y: -150
+    },
+    sprites: {
+        idle: {
+            imgSrc: "./assets/samuraiMack/Idle.png",
+            framesMax: 8
+        },
+        run: {
+            imgSrc: "./assets/samuraiMack/Run.png",
+            framesMax: 8,
+        },
+        jump: {
+            imgSrc: "./assets/samuraiMack/Jump.png",
+            framesMax: 2
+        },
+        // attack: { 
+        //     imgSrc: "./assets/samuraiMack/Attack1.png",
+        //     framesMax: 6
+        // },
     }
 });
 
@@ -156,22 +174,24 @@ function animate() {
     player.velocity.x = 0;
     enemy.velocity.x = 0;
 
+    player.image = player.sprites?.idle?.image;
     if (keys.a.pressed && player.lastKey === 'a') {
         player.velocity.x = -5;
+        player.image = player.sprites?.run?.image;
     } else if (keys.d.pressed && player.lastKey === 'd') {
         player.velocity.x = 5;
-    } else if (keys.w.pressed && player.lastKey === 'w') {
-        player.velocity.y = -5;
-    } else if (keys.s.pressed && player.lastKey === 's') {
-        player.velocity.y = 5;
+        player.image = player.sprites?.run?.image;
+    }
+
+    if (player.velocity.y < 0) {
+        player.image = player.sprites?.jump?.image;
+        player.framesMax = player.sprites?.jump?.framesMax;
+    }
+
+    if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
+        enemy.velocity.x = -5;
     } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
         enemy.velocity.x = 5;
-    } else if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
-        enemy.velocity.x = -5;
-    } else if (keys.ArrowUp.pressed && enemy.lastKey === 'ArrowUp') {
-        enemy.velocity.y = -5;
-    } else if (keys.ArrowDown.pressed && enemy.lastKey === 'ArrowDown') {
-        enemy.velocity.y = 5;
     }
 
     if (rectangularCollision({
@@ -214,7 +234,9 @@ window.addEventListener("keydown", (event) => {
             player.lastKey = 'a';
             break;
         case "w":
-            player.velocity.y = -20;
+            if (player.velocity.y === 0) {
+                player.velocity.y = -20;
+            }
             break;
         case "s":
             keys.s.pressed = true;
@@ -229,7 +251,9 @@ window.addEventListener("keydown", (event) => {
             enemy.lastKey = 'ArrowLeft';
             break;
         case "ArrowUp":
-            enemy.velocity.y = -20;
+            if (enemy.velocity.y === 0) {
+                enemy.velocity.y = -20;
+            }
             break;
         case "ArrowDown":
             // keys.ArrowDown.pressed = true;

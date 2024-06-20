@@ -4,37 +4,37 @@ export class Sprite {
     constructor({ position, imgSrc, ctx, scale = 1, framesMax = 1, offset = {x: 0, y: 0} }) {
         this.ctx = ctx;
         this.position = position;
-        this.img = new Image();
-        this.img.src = imgSrc;
+        this.image = new Image();
+        this.image.src = imgSrc;
         this.scale = scale;
         this.framesMax = framesMax;
-        this.frameCurrent = 0;
+        this.framesCurrent = 0;
         this.framesElapsed = 0;
         this.framesHold = 5;
         this.offset = offset;
 
-        this.img.onload = () => {
-            this.width = this.img.width / this.framesMax * this.scale;
-            this.height = this.img.height * this.scale;
+        this.image.onload = () => {
+            this.width = (this.image.width / this.framesMax) * this.scale;
+            this.height = this.image.height * this.scale;
         }
 
-        this.img.onerror = () => {
+        this.image.onerror = () => {
             console.error(`Failed to load image: ${imgSrc}`);
         }
     }
 
     draw() {
-        if (this.img.complete && this.img.naturalWidth !== 0) {
+        if (this.image.complete && this.image.naturalWidth !== 0) {
             this.ctx.drawImage(
-                this.img,
-                this.frameCurrent * (this.img.width / this.framesMax),
+                this.image,
+                this.framesCurrent * (this.image.width / this.framesMax),
                 0,
-                this.img.width / this.framesMax,
-                this.img.height,
+                this.image.width / this.framesMax,
+                this.image.height,
                 this.position.x - this.offset.x,
                 this.position.y - this.offset.y,
-                (this.img.width / this.framesMax) * this.scale,
-                this.img.height * this.scale
+                (this.image.width / this.framesMax) * this.scale,
+                this.image.height * this.scale
             );
         }
     }
@@ -43,13 +43,12 @@ export class Sprite {
         this.framesElapsed++;
 
         if (this.framesElapsed % this.framesHold === 0) {
-            if (this.frameCurrent < this.framesMax - 1) {
-                this.frameCurrent++;
+            if (this.framesCurrent < this.framesMax - 1) {
+                this.framesCurrent++;
             } else {
-                this.frameCurrent = 0;
+                this.framesCurrent = 0;
             }
         }
-
     }
 
     update() {
@@ -59,8 +58,27 @@ export class Sprite {
 }
 
 export class Fighter extends Sprite {
-    constructor({position, color = 'red', velocity, ctx, canvas, gravity, imgSrc, scale = 1, framesMax = 1, offset = {x: 0, y: 0} }) {
-        super({ position, imgSrc, ctx, scale, framesMax, offset });
+    constructor({
+        position,
+        color = 'red',
+        velocity,
+        ctx,
+        canvas,
+        gravity,
+        imgSrc,
+        scale = 1,
+        framesMax = 1,
+        offset = { x: 0, y: 0 },
+        sprites
+    }) {
+        super({
+            position,
+            imgSrc,
+            ctx,
+            scale,
+            framesMax,
+            offset
+        });
         this.velocity = velocity;
         this.color = color;
         this.width = 50;
@@ -80,21 +98,19 @@ export class Fighter extends Sprite {
         this.ctx = ctx;
         this.canvas = canvas;
         this.gravity = gravity;
-    }
+        this.framesCurrent = 0;
+        this.framesElapsed = 0;
+        this.framesHold = 5;
+        this.sprites = sprites;
 
-    draw() {
-        super.draw();
-
-        if (this.isAttacking) {
-            this.ctx.fillStyle = 'green';
-            this.ctx.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height);
+        for (const sprite in this.sprites) {
+            this.sprites[sprite].image = new Image();
+            this.sprites[sprite].image.src = this.sprites[sprite].imgSrc;
         }
     }
 
     update() {
         this.draw();
-        // super.update();
-
         this.animateFrames();
 
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
@@ -103,8 +119,9 @@ export class Fighter extends Sprite {
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
 
-        if (this.position.y + this.height + this.velocity.y >= this.canvas.height - 9) {
+        if (this.position.y + this.height + this.velocity.y >= this.canvas.height - 96) {
             this.velocity.y = 0;
+            this.position.y = this.canvas.height - this.height - 96;
         } else {
             this.velocity.y += this.gravity;
         }

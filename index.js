@@ -75,6 +75,14 @@ export const player = new Fighter({
             imgSrc: "./assets/samuraiMack/Attack1.png",
             framesMax: 6
         },
+    },
+    attackBox: {
+        offset: {
+            x: 100,
+            y: 0
+        },
+        width: 100,
+        height: 50
     }
 });
 
@@ -122,6 +130,14 @@ const enemy = new Fighter({
             imgSrc: "./assets/kenji/Attack1.png",
             framesMax: 4
         },
+    },
+    attackBox: {
+        offset: {
+            x: 0,
+            y: 0
+        },
+        width: 170,
+        height: 50
     }
 });
 
